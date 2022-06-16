@@ -4,6 +4,9 @@ import cors from 'cors';
 import logger from 'morgan';
 import path from 'path';
 import products from './data/products.json';
+import {PlayersCall,UsersCall} from "./entries/Players"
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient()
 
 // Creates and configures an ExpressJS web server2.
 class App {
@@ -38,6 +41,8 @@ class App {
             res.json(products);
         });
         this.express.use("/", router);
+        this.express.use("/Players",PlayersCall);
+        this.express.use("/Users",UsersCall);
     }
 }
 

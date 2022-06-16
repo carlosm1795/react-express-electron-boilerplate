@@ -1,0 +1,293 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../ra.db"
+}
+
+model ASISTENCIA {
+  IdAsistencia    Int           @id @default(autoincrement())
+  IdPersona       Int
+  IdTipoActividad Int
+  FechaActividad  String
+  Persona         Persona       @relation(fields: [IdPersona], references: [IdPersona], onDelete: Cascade, onUpdate: NoAction)
+  TipoActividad   TipoActividad @relation(fields: [IdTipoActividad], references: [IdTipoActividad], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model AgrupacionDePersonas {
+  IdAgrupacionDePersonas  Int                       @id @default(autoincrement())
+  Descripccion            String
+  EsPorEdad               Int
+  EdadMaximaPertenencia   Int
+  TipoIniciacionMaxima    Int
+  Persona                 Persona[]
+  RequisitosPorIniciacion RequisitosPorIniciacion[]
+}
+
+model Columna {
+  IdColumna            Int                    @id @default(autoincrement())
+  NumeroDeColumna      Int
+  Nombre               String
+  Protector            String
+  ColorCintas          String
+  UltimaModificacion   String
+  ModificadoPor        String
+  PaisOrigen           String?
+  Pais                 String?
+  Simbolo              String?
+  EncargadosPorColumna EncargadosPorColumna[]
+  PersonasPorColumna   PersonasPorColumna[]
+}
+
+model EncargadosPorColumna {
+  IdEncargadosPorColumna Int     @id @default(autoincrement())
+  IdColumna              Int
+  IdPersona              Int
+  UltimaModificacion     String
+  ModificadoPor          String
+  Columna                Columna @relation(fields: [IdColumna], references: [IdColumna], onDelete: NoAction, onUpdate: NoAction)
+  Persona                Persona @relation(fields: [IdPersona], references: [IdPersona], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model EstadoIniciacion {
+  IdEstadoIniciacion Int            @id @default(autoincrement())
+  Descripccion       String
+  MostrarReporte     Int
+  Iniciaciones       Iniciaciones[]
+}
+
+model EstadoRequisito {
+  IdEstadoRequisito       Int                       @id @default(autoincrement())
+  Descripccion            String
+  RequisitosPorIniciacion RequisitosPorIniciacion[]
+}
+
+model Iniciaciones {
+  IdIniciacion       Int              @id @default(autoincrement())
+  IdTipoIniciacion   Int
+  IdEstadoIniciacion Int
+  IdPersona          Int
+  IdMadrina          Int?
+  IdPadrino          Int?
+  FechaRecibido      String?
+  Lugar              String?
+  Comentarios        String?
+  HoraRecibido       String?
+  Lecturas           String?
+  UltimaModificacion String
+  ModificadoPor      String
+  LecturasPorDefecto String?
+  NombreIniciacion   String?
+  EstadoIniciacion   EstadoIniciacion @relation(fields: [IdEstadoIniciacion], references: [IdEstadoIniciacion], onDelete: NoAction, onUpdate: NoAction)
+  Persona            Persona          @relation(fields: [IdPersona], references: [IdPersona], onDelete: Cascade, onUpdate: NoAction)
+  TipoIniciacion     TipoIniciacion   @relation(fields: [IdTipoIniciacion], references: [IdTipoIniciacion], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model LOGS {
+  IdLog     Int    @id @default(autoincrement())
+  TimeStamp String
+  Query     String
+  User      String
+}
+
+model NombreEspeciales {
+  IdNombreEspecial   Int         @id @default(autoincrement())
+  IdTipoNombre       Int
+  IdPersona          Int
+  FechaOtorgado      String?
+  EsNombrePrincipal  Int
+  UltimaModificacion String
+  ModificadoPor      String
+  Nombre             String
+  Persona            Persona     @relation(fields: [IdPersona], references: [IdPersona], onDelete: Cascade, onUpdate: NoAction)
+  TipoDeNombe        TipoDeNombe @relation(fields: [IdTipoNombre], references: [IdTipoNombre], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model PeriodoDeSistema {
+  AnioActual         Int    @id @default(autoincrement())
+  UltimaModificacion String
+  ModificadoPor      String
+}
+
+model Persona {
+  IdPersona              Int                    @id @default(autoincrement())
+  NombreTerrenal         String
+  IdAgrupacionDePersonas Int
+  FechaNacimiento        String
+  Direccion              String?
+  Email                  String?
+  UltimaModificacion     String
+  ModificadoPor          String
+  EstaActivo             Int
+  Consecutivo            Int?
+  AgrupacionDePersonas   AgrupacionDePersonas   @relation(fields: [IdAgrupacionDePersonas], references: [IdAgrupacionDePersonas], onDelete: NoAction, onUpdate: NoAction)
+  ASISTENCIA             ASISTENCIA[]
+  EncargadosPorColumna   EncargadosPorColumna[]
+  Iniciaciones           Iniciaciones[]
+  NombreEspeciales       NombreEspeciales[]
+  PersonasPorColumna     PersonasPorColumna[]
+  RegistroCeremonias     RegistroCeremonias[]
+  RegistroComentarios    RegistroComentarios[]
+  RegistroDibujos        RegistroDibujos[]
+  Vestimentas            Vestimentas[]
+}
+
+model PersonasPorColumna {
+  IdPersonasPorColumna Int     @id @default(autoincrement())
+  IdPersona            Int
+  IdColumna            Int
+  FechaIngreso         String?
+  NumeroPosicion       Int?
+  Columna              Columna @relation(fields: [IdColumna], references: [IdColumna], onDelete: NoAction, onUpdate: NoAction)
+  Persona              Persona @relation(fields: [IdPersona], references: [IdPersona], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model RegistroCeremonias {
+  IdRegistroCeremonias Int            @id @default(autoincrement())
+  IdPersona            Int
+  IdTipoCeremonia      Int
+  FechaCeremonia       String?
+  Comentario           String?
+  Persona              Persona        @relation(fields: [IdPersona], references: [IdPersona], onDelete: Cascade, onUpdate: NoAction)
+  TipoCeremonias       TipoCeremonias @relation(fields: [IdTipoCeremonia], references: [IdTipoCeremonias], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model RegistroComentarios {
+  IdRegistroComentarios Int              @id @default(autoincrement())
+  IdPersona             Int
+  IdTipoDeRequisito     Int
+  FechaComentario       String
+  UltimaModificacion    String
+  ModificadoPor         String
+  Persona               Persona          @relation(fields: [IdPersona], references: [IdPersona], onDelete: Cascade, onUpdate: NoAction)
+  TiposDeRequisito      TiposDeRequisito @relation(fields: [IdTipoDeRequisito], references: [IdTipoDeRequisito], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model RegistroDibujos {
+  IdRegistroDibujos  Int        @id @default(autoincrement())
+  IdPersona          Int
+  IdTipoDibujo       Int
+  DescripccionDibujo String
+  ComentarioDibujo   String
+  UltimaModificacion String
+  ModificadoPor      String
+  CantidadDibujos    Int
+  Persona            Persona    @relation(fields: [IdPersona], references: [IdPersona], onDelete: Cascade, onUpdate: NoAction)
+  TipoDibujo         TipoDibujo @relation(fields: [IdTipoDibujo], references: [IdTipoDibujo], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model RequisitosPorIniciacion {
+  IdRequisitosPorIniciacion Int                  @id @default(autoincrement())
+  IdAgrupacionDePersonas    Int
+  IdEstadoRequisito         Int
+  IdTipoDeRequisito         Int
+  IdTipoPeriocidad          Int
+  CantidadPorAnio           String
+  FechaLimite               String
+  UltimaModificacion        String
+  ModificadoPor             String
+  AgrupacionDePersonas      AgrupacionDePersonas @relation(fields: [IdAgrupacionDePersonas], references: [IdAgrupacionDePersonas], onDelete: NoAction, onUpdate: NoAction)
+  EstadoRequisito           EstadoRequisito      @relation(fields: [IdEstadoRequisito], references: [IdEstadoRequisito], onDelete: NoAction, onUpdate: NoAction)
+  TiposDeRequisito          TiposDeRequisito     @relation(fields: [IdTipoDeRequisito], references: [IdTipoDeRequisito], onDelete: NoAction, onUpdate: NoAction)
+  TipoPeriocidad            TipoPeriocidad       @relation(fields: [IdTipoPeriocidad], references: [IdTipoPeriocidad], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model TipoActividad {
+  IdTipoActividad   Int              @id @default(autoincrement())
+  Descripccion      String
+  IdTipoDeRequisito Int
+  TiposDeRequisito   TiposDeRequisito     @relation(fields: [IdTipoDeRequisito], references: [IdTipoDeRequisito], onDelete: NoAction, onUpdate: NoAction)
+  ASISTENCIA        ASISTENCIA[]
+}
+
+model TipoCeremonias {
+  IdTipoCeremonias   Int                  @id @default(autoincrement())
+  Descripccion       String
+  IdTipoDeRequisito  Int
+  TiposDeRequisito   TiposDeRequisito     @relation(fields: [IdTipoDeRequisito], references: [IdTipoDeRequisito], onDelete: NoAction, onUpdate: NoAction)
+  RegistroCeremonias RegistroCeremonias[]
+}
+
+model TipoDeNombe {
+  IdTipoNombre     Int                @id @default(autoincrement())
+  Descripccion     String
+  NombreEspeciales NombreEspeciales[]
+}
+
+model TipoDeVestimenta {
+  IdTipoVestimenta   Int           @id @default(autoincrement())
+  NombreVestimenta   String
+  UltimaModificacion String
+  ModificadoPor      String
+  Vestimentas        Vestimentas[]
+}
+
+model TipoDibujo {
+  IdTipoDibujo    Int               @id @default(autoincrement())
+  Descripccion    String
+  MaximaCantidad  Int
+  RegistroDibujos RegistroDibujos[]
+}
+
+model TipoIniciacion {
+  IdTipoIniciacion   Int              @id @default(autoincrement())
+  NumeroIniciacion   Int
+  Comentarios        String
+  UltimaModificacion String
+  ModificadoPor      String
+  LecturaPorDefecto  Unsupported("")?
+  NombreIniciacion   Unsupported("")?
+  Iniciaciones       Iniciaciones[]
+}
+
+model TipoPeriocidad {
+  IdTipoPeriocidad        Int                       @id @default(autoincrement())
+  Descripccion            String
+  CantidadMeses           Int
+  RequisitosPorIniciacion RequisitosPorIniciacion[]
+}
+
+model TipoUsuario {
+  IdTipoUsuario      Int       @id @default(autoincrement())
+  Descripccion       String?
+  EditaIniciaciones  Int
+  EditaCeremonias    Int
+  EditaAsistencia    Int
+  UltimaModificacion String
+  ModificadoPor      String
+  Usuario            Usuario[]
+}
+
+model TiposDeRequisito {
+  IdTipoDeRequisito       Int                       @id @default(autoincrement())
+  Descripccion            String
+  RegistroComentarios     RegistroComentarios[]
+  RequisitosPorIniciacion RequisitosPorIniciacion[]
+  TipoActividad           TipoActividad[]
+  TipoCeremonias          TipoCeremonias[]
+}
+
+model Usuario {
+  IdUsuario          Int         @id @default(autoincrement())
+  IdTipoUsuario      Int
+  Nombre             String
+  Contrasena         String
+  UltimaModificacion String
+  ModificadoPor      String
+  Estado             Int
+  TipoUsuario        TipoUsuario @relation(fields: [IdTipoUsuario], references: [IdTipoUsuario], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Vestimentas {
+  IdVestimenta       Int              @id @default(autoincrement())
+  IdPersona          Int
+  FechaRecibidad     String?
+  IdTipoVestimenta   Int
+  Comentarios        String?
+  UltimaModificacion String
+  ModificadoPor      String
+  Persona            Persona          @relation(fields: [IdPersona], references: [IdPersona], onDelete: Cascade, onUpdate: NoAction)
+  TipoDeVestimenta   TipoDeVestimenta @relation(fields: [IdTipoVestimenta], references: [IdTipoVestimenta], onDelete: Cascade, onUpdate: NoAction)
+}

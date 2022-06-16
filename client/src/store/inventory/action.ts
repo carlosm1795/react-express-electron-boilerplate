@@ -33,3 +33,28 @@ export const fetchRequest: AppThunk = () => {
         }
     };
 };
+
+export const fetchPlayers: AppThunk = () => {
+    return (dispatch: Dispatch): any => {
+        try {
+            dispatch({
+                type: InventoryActionTypes.FETCH_REQUEST,
+            });
+
+            return axios({
+                method: 'GET',
+                url: "http://localhost:3001/Players/getPlayers",
+                responseType: "json"
+            }).then((response) =>
+                dispatch({
+                    type: InventoryActionTypes.FETCH_SUCCESS,
+                    payload: response.data,
+                })
+            )
+        } catch (e) {
+            return dispatch({
+                type: InventoryActionTypes.FETCH_ERROR
+            });
+        }
+    };
+};

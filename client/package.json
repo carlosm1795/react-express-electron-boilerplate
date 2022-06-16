@@ -7,11 +7,11 @@
   "scripts": {
     "react-start": "react-scripts start",
     "move-client": "mv build ../server/dist/client || move build ../server/dist/client",
-    "react-build": "react-scripts build && yarn run move-client",
+    "react-build": "react-scripts build && npm run move-client",
     "test": "react-scripts test --env=jsdom",
     "test-no-watch": "react-scripts test --env=jsdom --watchAll=false",
     "test-coverage": "react-scripts test --coverage --env=jsdom --watchAll=false",
-    "start": "cross-env BROWSER=none yarn run react-start"
+    "start": "cross-env BROWSER=none npm run react-start"
   },
   "jest": {
     "collectCoverageFrom": [
