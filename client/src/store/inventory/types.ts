@@ -1,6 +1,8 @@
 export interface Inventory {
-    id: string;
-    name: string;
+    IdPersona: string;
+    id:string;
+    name:string;
+    NombreTerrenal: string;
     price: string;
     image: string;
     description: string;

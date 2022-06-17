@@ -41,8 +41,8 @@ const ShowPlayers: React.FunctionComponent<PropsFromState> = ({
             data.length > 0 ?
               data.map(item => {
                 return (
-                    <Grid key={item.id} container justify="center" item xs={12} lg={4} sm={6} md={6}>
-                     {item.name}
+                    <Grid key={item.IdPersona} container justify="center" item xs={12} lg={4} sm={6} md={6}>
+                     {item.NombreTerrenal}
                       {/* <ProductItem item={item} /> */}
                     </Grid>
                 )

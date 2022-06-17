@@ -43,7 +43,7 @@ export const fetchPlayers: AppThunk = () => {
 
             return axios({
                 method: 'GET',
-                url: "http://localhost:3001/Players/getPlayers",
+                url: "http://localhost:3001/Personas/getPersonas",
                 responseType: "json"
             }).then((response) =>
                 dispatch({
